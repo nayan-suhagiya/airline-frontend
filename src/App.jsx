@@ -1,3 +1,4 @@
+import { createContext } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import Landing from "./Pages/Landing";
@@ -6,13 +7,15 @@ import Nav from "./Components/Nav";
 import Login from "./Auth/Login";
 import Logout from "./Auth/Logout";
 import AuthRoute from "./Routes/AuthRoute";
-import Home from "./Pages/Admin/AdminHome";
 import AdminHome from "./Pages/Admin/AdminHome";
 import UserHome from "./Pages/User/UserHome";
+import NotFound from "./Pages/NotFound";
+
+const useContext = createContext();
 
 const App = () => {
   return (
-    <BrowserRouter>
+    <>
       <Nav />
       <Routes>
         <Route path="/" element={<Landing title={"Airline-Home"} />} />
@@ -25,9 +28,9 @@ const App = () => {
         <Route path="dashboard" element={<AuthRoute />}>
           <Route path="admin" element={<AdminHome />} />
         </Route>
-        <Route path="*" element={<Error />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
-    </BrowserRouter>
+    </>
   );
 };
 
