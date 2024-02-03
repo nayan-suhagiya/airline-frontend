@@ -1,12 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import navicon from "../assets/navicon.gif";
+import { useAuth } from "../Context/Auth";
+import { useNavigate } from "react-router-dom";
 
 const Nav = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isProfileMenuOpen, setProfileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isProfileMenuOpen && !event.target.closest(".profile-dropdown-button")) {
+        setProfileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [isProfileMenuOpen]);
+
+
+  const { user, logout } = useAuth();
+
+  console.log("user in Nav >>>", user);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const toggleProfileMenu = () => {
+    setProfileMenuOpen(!isProfileMenuOpen);
+  };
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
   };
 
   return (
@@ -24,15 +57,46 @@ const Nav = () => {
             <Link to="about" className="text-white text-lg hover:text-gray-300">
               About
             </Link>
-            <Link to="login" className="text-white text-lg hover:text-gray-300">
-              Login
-            </Link>
-            <Link
-              to="logout"
-              className="text-white text-lg hover:text-gray-300"
-            >
-              Logout
-            </Link>
+            {user ? (
+              <div className="relative">
+                <button
+                  className="profile-dropdown-button text-white text-lg hover:text-gray-300"
+                  onClick={toggleProfileMenu}
+                >
+                  {user && user.name ? user.name : "Profile"}
+                </button>
+                {isProfileMenuOpen && (
+                  <div className="absolute top-10 right-0 bg-white rounded shadow-md">
+                    {
+                      user.isAdmin ? <Link
+                        to="/dashboard/admin"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Dashboard
+                      </Link> : <Link
+                        to="/dashboard/user"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Dashboard
+                      </Link>
+                    }
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                to="login"
+                className="text-white text-lg hover:text-gray-300"
+              >
+                Login
+              </Link>
+            )}
           </div>
 
           <div className="md:hidden">
@@ -47,9 +111,7 @@ const Nav = () => {
         </div>
 
         <div
-          className={`md:hidden ${
-            isMobileMenuOpen ? "block" : "hidden"
-          } mt-4 px-4`}
+          className={`md:hidden ${isMobileMenuOpen ? "block" : "hidden"} mt-4 px-4`}
         >
           <div>
             <Link to="/" className="text-white hover:text-gray-300">
@@ -61,19 +123,46 @@ const Nav = () => {
               About
             </Link>
           </div>
-          <div>
-            <Link to="login" className="text-white text-lg hover:text-gray-300">
-              Login
-            </Link>
-          </div>
-          <div>
+          {user ? (
+            <div className="relative">
+              <button
+                className="profile-dropdown-button text-white text-lg hover:text-gray-300"
+                onClick={toggleProfileMenu}
+              >
+                {user && user.name ? user.name : "Profile"}
+              </button>
+              {isProfileMenuOpen && (
+                <div className="absolute top-10 right-0 bg-white rounded shadow-md">
+                  {
+                    user.isAdmin ? <Link
+                      to="/dashboard/admin"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Dashboard
+                    </Link> : <Link
+                      to="/dashboard/user"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Dashboard
+                    </Link>
+                  }
+                  <button
+                    onClick={handleLogout}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
             <Link
-              to="logout"
+              to="login"
               className="text-white text-lg hover:text-gray-300"
             >
-              Logout
+              Login
             </Link>
-          </div>
+          )}
         </div>
       </nav>
     </>

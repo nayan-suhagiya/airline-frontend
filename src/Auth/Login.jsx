@@ -1,10 +1,23 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import { useAuth } from "../Context/Auth";
 
 const Login = ({ title }) => {
   const navigate = useNavigate();
+
+  const {login,user} = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      if (user.isAdmin) {
+        navigate("/dashboard/admin");
+      } else {
+        navigate("/dashboard/user");
+      }
+    }
+  })
 
   document.title = title;
 
@@ -27,8 +40,6 @@ const Login = ({ title }) => {
       return;
     }
 
-    console.log(loginData);
-
     try {
       const response = await axios.post(
         "http://localhost:5050/api/auth/login",
@@ -37,20 +48,26 @@ const Login = ({ title }) => {
           password: loginData.password,
         }
       );
-      if (response?.status === 200) {
-        toast.success(response.data.msg);
-        console.log(response.data);
-        const token = response.data.token;
+
+      const { data } = response;
+      
+      const responseData = data.data;
+
+      if (data && data.status === 200) {
+        toast.success(data.msg);
+        const token = responseData.token;
         localStorage.setItem("token", token);
-        if (response.data.isAdmin) {
+        login(responseData.token);
+        if (responseData.isAdmin) {
           navigate("/dashboard/admin");
         } else {
           navigate("/dashboard/user");
         }
       }
+
     } catch (error) {
-      console.log("error in login >>>>", error);
-      toast.error(error.response.data.error);
+      console.log("error in login >>>>", error.response.data.msg);
+      toast.error(error.response.data.msg);
     }
   };
 
@@ -58,6 +75,10 @@ const Login = ({ title }) => {
     const { name, value } = e.target;
     setLoginData({ ...loginData, [name]: value });
   };
+
+  const jumpToRegister = () => {
+    navigate("/register");
+  }
 
   return (
     <>
@@ -123,6 +144,12 @@ const Login = ({ title }) => {
                 Sign in
               </button>
             </div>
+            <p className="mt-10 text-center text-sm text-gray-500">
+              Not an account?
+              <a className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 cursor-pointer" onClick={jumpToRegister}>
+                SignIn
+              </a>
+            </p>
           </form>
         </div>
         <ToastContainer />

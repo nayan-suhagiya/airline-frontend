@@ -1,36 +1,40 @@
-import { createContext } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
-import Landing from "./Pages/Landing";
-import { About } from "./Pages/About";
-import Nav from "./Components/Nav";
-import Login from "./Auth/Login";
-import Logout from "./Auth/Logout";
-import AuthRoute from "./Routes/AuthRoute";
-import AdminHome from "./Pages/Admin/AdminHome";
-import UserHome from "./Pages/User/UserHome";
-import NotFound from "./Pages/NotFound";
-
-const useContext = createContext();
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Login from './Auth/Login';
+import Landing from './Pages/Landing';
+import About from './Pages/About';
+import { AuthProvider } from './Context/Auth';
+import PrivateRoute from './Routes/PrivateRoute'; // Assuming this only handles authorization
+import NotFound from './Pages/NotFound';
+import AdminDashboard from './Components/AdminDashboard';
+import UserDashboard from './Components/UserDashboard';
+import Nav from './Components/Nav';
+import UserProfile from './Pages/User/UserProfile';
+import AdminProfile from './Pages/Admin/AdminProfile';
+import Register from './Auth/Register';
 
 const App = () => {
   return (
-    <>
-      <Nav />
-      <Routes>
-        <Route path="/" element={<Landing title={"Airline-Home"} />} />
-        <Route path="/about" element={<About title={"Airline-About"} />} />
-        <Route path="/login" element={<Login title={"Airline-Login"} />} />
-        <Route path="/logout" element={<Logout />} />
-        <Route path="dashboard" element={<AuthRoute />}>
-          <Route path="user" element={<UserHome />} />
-        </Route>
-        <Route path="dashboard" element={<AuthRoute />}>
-          <Route path="admin" element={<AdminHome />} />
-        </Route>
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </>
+    <Router>
+      <AuthProvider>
+        <Nav />
+        <Routes>
+          <Route path="/" element={<Landing title={"Airline-Home"} />} />
+          <Route path="/about" element={<About title={"Airline-About"} />} />
+          <Route path="/login" element={<Login title={"Airline-Login"} />} />
+          <Route path="/register" element={<Register title={"Airline-Register"} />} />
+          <Route path='dashboard' element={<PrivateRoute />} >
+            <Route path='user' element={<UserDashboard />}>
+              <Route path='profile' element={<UserProfile />} />
+            </Route>
+            <Route path='admin' element={<AdminDashboard />}>
+              <Route path='profile' element={<AdminProfile />} />
+            </Route>
+          </Route>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </AuthProvider>
+    </Router>
   );
 };
 
