@@ -1,4 +1,5 @@
-import { Routes, Route } from "react-router-dom";
+import { createContext } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import Landing from "./Pages/Landing";
 import { About } from "./Pages/About";
@@ -9,6 +10,8 @@ import AuthRoute from "./Routes/AuthRoute";
 import AdminHome from "./Pages/Admin/AdminHome";
 import UserHome from "./Pages/User/UserHome";
 import NotFound from "./Pages/NotFound";
+
+const useContext = createContext();
 
 const App = () => {
   return (

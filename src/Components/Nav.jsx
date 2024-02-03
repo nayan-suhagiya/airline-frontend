@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import navicon from "../assets/navicon.gif";
-import { useAuth } from "../Context/Auth";
 
 const Nav = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -9,18 +8,6 @@ const Nav = () => {
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
   };
-
-  const { auth, logout } = useAuth();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    if (Object.keys(auth).length > 0) {
-      console.log("auth >>>>", auth);
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
-  }, [auth, isLoggedIn, logout]);
 
   return (
     <>
@@ -37,21 +24,15 @@ const Nav = () => {
             <Link to="about" className="text-white text-lg hover:text-gray-300">
               About
             </Link>
-            {isLoggedIn ? (
-              <button
-                onClick={logout}
-                className="text-white text-lg hover:text-gray-300"
-              >
-                Logout
-              </button>
-            ) : (
-              <Link
-                to="login"
-                className="text-white text-lg hover:text-gray-300"
-              >
-                Login
-              </Link>
-            )}
+            <Link to="login" className="text-white text-lg hover:text-gray-300">
+              Login
+            </Link>
+            <Link
+              to="logout"
+              className="text-white text-lg hover:text-gray-300"
+            >
+              Logout
+            </Link>
           </div>
 
           <div className="md:hidden">
