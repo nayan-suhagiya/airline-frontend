@@ -7,7 +7,7 @@ import { useAuth } from "../Context/Auth";
 const Login = ({ title }) => {
   const navigate = useNavigate();
 
-  const {login,user} = useAuth();
+  const { login, user } = useAuth();
 
   useEffect(() => {
     if (user) {
@@ -17,7 +17,7 @@ const Login = ({ title }) => {
         navigate("/dashboard/user");
       }
     }
-  })
+  });
 
   document.title = title;
 
@@ -50,9 +50,8 @@ const Login = ({ title }) => {
       );
 
       const { data } = response;
-      
-      const responseData = data.data;
 
+      const responseData = data.data;
       if (data && data.status === 200) {
         toast.success(data.msg);
         const token = responseData.token;
@@ -64,9 +63,7 @@ const Login = ({ title }) => {
           navigate("/dashboard/user");
         }
       }
-
     } catch (error) {
-      console.log("error in login >>>>", error.response.data.msg);
       toast.error(error.response.data.msg);
     }
   };
@@ -78,7 +75,7 @@ const Login = ({ title }) => {
 
   const jumpToRegister = () => {
     navigate("/register");
-  }
+  };
 
   return (
     <>
@@ -145,9 +142,12 @@ const Login = ({ title }) => {
               </button>
             </div>
             <p className="mt-10 text-center text-sm text-gray-500">
-              Not an account?
-              <a className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 cursor-pointer" onClick={jumpToRegister}>
-                SignIn
+              Not an account? &nbsp;
+              <a
+                className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 cursor-pointer"
+                onClick={jumpToRegister}
+              >
+                Sign Up
               </a>
             </p>
           </form>

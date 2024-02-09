@@ -10,7 +10,10 @@ const Nav = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (isProfileMenuOpen && !event.target.closest(".profile-dropdown-button")) {
+      if (
+        isProfileMenuOpen &&
+        !event.target.closest(".profile-dropdown-button")
+      ) {
         setProfileMenuOpen(false);
       }
     };
@@ -22,10 +25,7 @@ const Nav = () => {
     };
   }, [isProfileMenuOpen]);
 
-
   const { user, logout } = useAuth();
-
-  console.log("user in Nav >>>", user);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
@@ -67,19 +67,21 @@ const Nav = () => {
                 </button>
                 {isProfileMenuOpen && (
                   <div className="absolute top-10 right-0 bg-white rounded shadow-md">
-                    {
-                      user.isAdmin ? <Link
+                    {user.isAdmin ? (
+                      <Link
                         to="/dashboard/admin"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
                         Dashboard
-                      </Link> : <Link
+                      </Link>
+                    ) : (
+                      <Link
                         to="/dashboard/user"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
                         Dashboard
                       </Link>
-                    }
+                    )}
                     <button
                       onClick={handleLogout}
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -111,7 +113,9 @@ const Nav = () => {
         </div>
 
         <div
-          className={`md:hidden ${isMobileMenuOpen ? "block" : "hidden"} mt-4 px-4`}
+          className={`md:hidden ${
+            isMobileMenuOpen ? "block" : "hidden"
+          } mt-4 px-4`}
         >
           <div>
             <Link to="/" className="text-white hover:text-gray-300">
@@ -133,19 +137,21 @@ const Nav = () => {
               </button>
               {isProfileMenuOpen && (
                 <div className="absolute top-10 right-0 bg-white rounded shadow-md">
-                  {
-                    user.isAdmin ? <Link
+                  {user.isAdmin ? (
+                    <Link
                       to="/dashboard/admin"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
                       Dashboard
-                    </Link> : <Link
+                    </Link>
+                  ) : (
+                    <Link
                       to="/dashboard/user"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     >
                       Dashboard
                     </Link>
-                  }
+                  )}
                   <button
                     onClick={handleLogout}
                     className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -156,10 +162,7 @@ const Nav = () => {
               )}
             </div>
           ) : (
-            <Link
-              to="login"
-              className="text-white text-lg hover:text-gray-300"
-            >
+            <Link to="login" className="text-white text-lg hover:text-gray-300">
               Login
             </Link>
           )}
