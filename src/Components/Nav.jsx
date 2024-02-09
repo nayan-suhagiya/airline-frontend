@@ -57,6 +57,12 @@ const Nav = () => {
             <Link to="about" className="text-white text-lg hover:text-gray-300">
               About
             </Link>
+            <Link
+              to="book-ticket"
+              className="text-white text-lg hover:text-gray-300"
+            >
+              Book Ticket
+            </Link>
             {user ? (
               <div className="relative">
                 <button

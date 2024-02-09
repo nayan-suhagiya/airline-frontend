@@ -12,6 +12,7 @@ import Nav from "./Components/Nav";
 import UserProfile from "./Pages/User/UserProfile";
 import AdminProfile from "./Pages/Admin/AdminProfile";
 import Register from "./Auth/Register";
+import Booking from "./Pages/Booking";
 
 const App = () => {
   return (
@@ -34,7 +35,7 @@ const App = () => {
               <Route path="profile" element={<AdminProfile />} />
             </Route>
           </Route>
-          <Route path="/book" element={<Booking />} />
+          <Route path="/book-ticket" element={<Booking />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AuthProvider>
