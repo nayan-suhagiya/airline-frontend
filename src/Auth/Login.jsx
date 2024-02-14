@@ -50,21 +50,21 @@ const Login = ({ title }) => {
       );
 
       const { data } = response;
+      console.log(response);
 
-      const responseData = data.data;
-      if (data && data.status === 200) {
-        toast.success(data.msg);
-        const token = responseData.token;
-        localStorage.setItem("token", token);
-        login(responseData.token);
-        if (responseData.isAdmin) {
+      console.log(data);
+
+      if (data && response.status === 200) {
+        localStorage.setItem("token", data.token);
+        login(data.token);
+        if (data.isAdmin) {
           navigate("/dashboard/admin");
         } else {
           navigate("/dashboard/user");
         }
       }
     } catch (error) {
-      toast.error(error.response.data.msg);
+      console.log(error);
     }
   };
 
