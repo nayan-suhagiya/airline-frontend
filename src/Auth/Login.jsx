@@ -50,14 +50,11 @@ const Login = ({ title }) => {
       );
 
       const { data } = response;
-      console.log(response);
 
-      console.log(data);
-
-      if (data && response.status === 200) {
-        localStorage.setItem("token", data.token);
-        login(data.token);
-        if (data.isAdmin) {
+      if (data && data.status === 200) {
+        localStorage.setItem("token", data.data.token);
+        login(data.data.token);
+        if (data.data.isAdmin) {
           navigate("/dashboard/admin");
         } else {
           navigate("/dashboard/user");
