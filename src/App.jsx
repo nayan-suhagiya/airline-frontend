@@ -10,9 +10,13 @@ import AdminDashboard from "./Components/AdminDashboard";
 import UserDashboard from "./Components/UserDashboard";
 import Nav from "./Components/Nav";
 import UserProfile from "./Pages/User/UserProfile";
-import AdminProfile from "./Pages/Admin/AdminProfile";
 import Register from "./Auth/Register";
-import Booking from "./Pages/Booking";
+import ProfileContent from "./content/Admin/ProfileContent";
+import FlightContent from "./content/Admin/FlightContent";
+import BookingContent from "./content/Admin/BookingContent";
+import UserContent from "./content/Admin/UserContent";
+import CityContent from "./content/Admin/CityContent";
+import { ToastContainer } from "react-toastify";
 
 const App = () => {
   return (
@@ -32,12 +36,16 @@ const App = () => {
               <Route path="profile" element={<UserProfile />} />
             </Route>
             <Route path="admin" element={<AdminDashboard />}>
-              <Route path="profile" element={<AdminProfile />} />
+              <Route path="profile" element={<ProfileContent />} />
+              <Route path="flight" element={<FlightContent />} />
+              <Route path="booking" element={<BookingContent />} />
+              <Route path="user" element={<UserContent />} />
+              <Route path="city" element={<CityContent />} />
             </Route>
           </Route>
-          <Route path="/book-ticket" element={<Booking />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <ToastContainer />
       </AuthProvider>
     </Router>
   );
