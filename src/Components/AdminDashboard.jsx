@@ -15,7 +15,7 @@ const AdminDashboard = () => {
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
       <nav
-        className={`bg-gray-800 w-64 px-8 py-4 fixed inset-y-0 left-0 transform ${isOpen ? "translate-x-0" : "-translate-x-full"
+        className={`bg-gray-800 w-52 px-8 py-4 fixed inset-y-0 left-0 transform ${isOpen ? "translate-x-0" : "-translate-x-full"
           } transition-transform duration-300 ease-in-out md:relative md:translate-x-0`}
       >
         <div className="flex items-center justify-between">
