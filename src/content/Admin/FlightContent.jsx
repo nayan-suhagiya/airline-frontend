@@ -21,6 +21,8 @@ const FlightContent = () => {
     const [showEditPopup, setShowEditPopup] = useState(false);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [deleteFlightId, setDeleteFlightId] = useState(null);
+    const [dapatureCities,setDepatureCities] = useState([]);
+    const [destinationCities,setDestinationCities] = useState([]);
 
     useEffect(() => {
         fetchFlights();
@@ -28,6 +30,21 @@ const FlightContent = () => {
             fetchCities();
         }
     }, [showPopup,showEditPopup]);
+
+    useEffect(() => {
+
+        if(formData.departureID){
+            const destinationCities = cities.filter(city => city.id !== formData.departureID);
+            setDestinationCities(destinationCities);
+        }
+
+        if(formData.destinationID){
+            const departureCities = cities.filter(city => city.id !== formData.destinationID);
+            setDepatureCities(departureCities);
+        }
+
+    },[formData.departureID,formData.destinationID])
+    
 
     const fetchCities = async () => {
         try {
@@ -38,6 +55,8 @@ const FlightContent = () => {
             console.log("Cities data:", data);
             if (data.status === 200) {
                 setCities(data.data);
+                setDepatureCities(data.data);
+                setDestinationCities(data.data);
             }
         } catch (error) {
             console.error("Error fetching cities:", error);
@@ -115,6 +134,17 @@ const FlightContent = () => {
 
     const handleClosePopup = () => {
         setShowPopup(false);
+        setFormData({
+            flightNumber: '',
+            departureID: '',
+            destinationID: '',
+            departureTime: '',
+            arrivalTime: '',
+            totalCapacity: '',
+            availableSeats: '',
+            classType: '',
+            baseFare: '',
+        });
     };
 
     const handleCloseEditPopup = () => {
@@ -212,7 +242,7 @@ const FlightContent = () => {
                                     <label htmlFor="departureID" className="block font-semibold my-2">Departure City</label>
                                     <select id="departureID" name="departureID" value={formData.departureID} onChange={handleChangeForAdd} className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:border-indigo-500">
                                         <option value="">Select Departure City</option>
-                                        {cities.map(city => (
+                                        {dapatureCities.map(city => (
                                             <option key={city.id} value={city.id}>{city.cityName}</option>
                                         ))}
                                     </select>
@@ -221,7 +251,7 @@ const FlightContent = () => {
                                     <label htmlFor="destinationID" className="block font-semibold my-2">Destination City</label>
                                     <select id="destinationID" name="destinationID" value={formData.destinationID} onChange={handleChangeForAdd} className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:border-indigo-500">
                                         <option value="">Select Destination City</option>
-                                        {cities.map(city => (
+                                        {destinationCities.map(city => (
                                             <option key={city.id} value={city.id}>{city.cityName}</option>
                                         ))}
                                     </select>
