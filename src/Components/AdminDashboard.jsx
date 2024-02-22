@@ -12,7 +12,7 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-gray-100 overflow-x-hidden">
       {/* Sidebar */}
       <nav
         className={`bg-gray-800 w-52 px-8 py-4 fixed inset-y-0 left-0 transform ${isOpen ? "translate-x-0" : "-translate-x-full"

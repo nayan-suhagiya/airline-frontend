@@ -7,6 +7,7 @@ const FlightContent = () => {
         flightNumber: '',
         departureID: '',
         destinationID: '',
+        journeyDate:'',
         departureTime: '',
         arrivalTime: '',
         totalCapacity: '',
@@ -90,7 +91,7 @@ const FlightContent = () => {
         e.preventDefault();
         console.log("formData >>>", formData);
 
-        if (!formData.flightNumber || !formData.departureID || !formData.destinationID || !formData.departureTime || !formData.arrivalTime || !formData.totalCapacity || !formData.availableSeats || !formData.classType || !formData.baseFare) {
+        if (!formData.flightNumber || !formData.departureID || !formData.destinationID || !formData.journeyDate || !formData.departureTime || !formData.arrivalTime || !formData.totalCapacity || !formData.availableSeats || !formData.classType || !formData.baseFare) {
             toast.error("All fields are required");
             return;
         }
@@ -118,6 +119,7 @@ const FlightContent = () => {
                     flightNumber: '',
                     departureID: '',
                     destinationID: '',
+                    journeyDate:'',
                     departureTime: '',
                     arrivalTime: '',
                     totalCapacity: '',
@@ -138,6 +140,7 @@ const FlightContent = () => {
             flightNumber: '',
             departureID: '',
             destinationID: '',
+            journeyDate:'',
             departureTime: '',
             arrivalTime: '',
             totalCapacity: '',
@@ -171,7 +174,7 @@ const FlightContent = () => {
 
     const handleUpdateFlight = async () => {
         try {
-            if (!editFlightData.flightNumber || !editFlightData.departureID || !editFlightData.destinationID || !editFlightData.departureTime || !editFlightData.arrivalTime || !editFlightData.totalCapacity || !editFlightData.availableSeats || !editFlightData.classType || !editFlightData.baseFare) {
+            if (!editFlightData.flightNumber || !editFlightData.departureID || !editFlightData.destinationID || editFlightData.journeyDate || !editFlightData.departureTime || !editFlightData.arrivalTime || !editFlightData.totalCapacity || !editFlightData.availableSeats || !editFlightData.classType || !editFlightData.baseFare) {
                 toast.error("All fields are required");
                 return;
             }
@@ -257,6 +260,10 @@ const FlightContent = () => {
                                     </select>
                                 </div>
                                 <div>
+                                    <label htmlFor="journeyDate" className="block font-semibold my-2">journeyDate</label>
+                                    <input type="date" id="journeyDate" name="journeyDate" value={formData.journeyDate} onChange={handleChangeForAdd} className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:border-indigo-500" />
+                                </div>
+                                <div>
                                     <label htmlFor="departureTime" className="block font-semibold my-2">Departure Time</label>
                                     <input type="datetime-local" id="departureTime" name="departureTime" value={formData.departureTime} onChange={handleChangeForAdd} className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:border-indigo-500" />
                                 </div>
@@ -294,17 +301,18 @@ const FlightContent = () => {
                 )}
             </div>
             <div className='mt-4'>
-                <div className='flex justify-between'>
+                <div className='w-11/12 flex justify-between'>
                     <h2 className="text-2xl font-semibold mb-4">All Flights</h2>
                     <button onClick={togglePopup} className="bg-indigo-500 text-white rounded-md px-4 py-2 mb-2 focus:outline-none hover:bg-indigo-600">Add Flight</button>
                 </div>
-                <div className="overflow-x-auto">
+                <div className="overflow-x-scroll w-11/12">
                     <table className="table-auto border border-gray-300">
                         <thead>
                             <tr className="bg-gray-200">
                                 <th className="px-4 py-2">flightNumber</th>
                                 <th className="px-4 py-2">departure</th>
                                 <th className="px-4 py-2">destination</th>
+                                <th className="px-4 py-2">journeyDate</th>
                                 <th className="px-4 py-2">departureTime</th>
                                 <th className="px-4 py-2">arrivalTime</th>
                                 <th className="px-4 py-2">totalCapacity</th>
@@ -320,14 +328,15 @@ const FlightContent = () => {
                                     <td className="border px-4 py-2">{flight.flightNumber}</td>
                                     <td className="border px-4 py-2">{flight.departureCity.cityName}</td>
                                     <td className="border px-4 py-2">{flight.destinationCity.cityName}</td>
+                                    <td className="border px-4 py-2">{new Date(flight.journeyDate).toLocaleString()}</td>
                                     <td className="border px-4 py-2">{new Date(flight.departureTime).toLocaleString()}</td>
                                     <td className="border px-4 py-2">{new Date(flight.arrivalTime).toLocaleString()}</td>
                                     <td className="border px-4 py-2">{flight.totalCapacity}</td>
                                     <td className="border px-4 py-2">{flight.availableSeats}</td>
                                     <td className="border px-4 py-2">{flight.classType}</td>
                                     <td className="border px-4 py-2">{flight.baseFare}</td>
-                                    <td className="border px-4 py-2">
-                                        <button className="bg-blue-500 text-white rounded-md px-4 py-2 focus:outline-none hover:bg-blue-600 mx-2" onClick={() => handleEdit(flight.id)}>Edit</button>
+                                    <td className=" px-4 py-2 flex">
+                                        <button className="bg-blue-500 text-white rounded-md px-4 py-2 focus:outline-none hover:bg-blue-600 mx-2 my-2" onClick={() => handleEdit(flight.id)}>Edit</button>
                                         <button className="bg-red-500 text-white rounded-md px-4 py-2 focus:outline-none hover:bg-red-600 mx-2 my-2" onClick={() => handleDelete(flight.id)}>Delete</button>
                                     </td>
                                 </tr>
