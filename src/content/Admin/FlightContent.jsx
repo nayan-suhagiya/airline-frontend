@@ -373,6 +373,10 @@ const FlightContent = () => {
                                 </select>
                             </div>
                             <div>
+                                    <label htmlFor="journeyDate" className="block font-semibold my-2">journeyDate</label>
+                                    <input type="date" id="journeyDate" name="journeyDate" value={new Date(editFlightData.journeyDate).toISOString().split('T')[0]} onChange={handleChangeForEdit} className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:border-indigo-500" />
+                                </div>
+                            <div>
                                 <label htmlFor="departureTime" className="block font-semibold my-2">Departure Time</label>
                                 <input type="datetime-local" id="departureTime" name="departureTime" value={editFlightData.departureTime ? editFlightData.departureTime.slice(0, -1) : ''} onChange={handleChangeForEdit} className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:border-indigo-500" />
                             </div>
