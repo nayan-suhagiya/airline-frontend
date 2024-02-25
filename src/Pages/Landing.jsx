@@ -5,9 +5,16 @@ import Air3 from "../assets/air3.jpg";
 import Air4 from "../assets/air4.jpg";
 import Air5 from "../assets/air5.jpg";
 import Air6 from "../assets/air6.jpg";
-import Air7 from "../assets/air7.jpg";
+import { useNavigate } from "react-router-dom";
+
 
 const Landing = () => {
+  const navigate = useNavigate();
+
+  const redirectToBooking = () => {
+    navigate("/booking");
+  }
+
   return (
     <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <div className="text-center">
@@ -18,12 +25,12 @@ const Landing = () => {
           Explore seamless skies with our user-friendly airline website. Discover effortless booking, real-time flight updates, and exclusive deals. Elevate your travel experience with our intuitive interface, making your journey from booking to boarding a breeze. Fly with confidence, fly with our Airline Name
         </p>
         <div className="mt-8">
-          <a
-            href="#"
+          <button
+          onClick={redirectToBooking}
             className="inline-block rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-center font-medium text-white hover:bg-indigo-700"
           >
             Fly in the sky with us
-          </a>
+          </button>
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8 mt-12">
