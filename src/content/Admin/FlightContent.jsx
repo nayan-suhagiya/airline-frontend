@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 
+
 const FlightContent = () => {
     const [formData, setFormData] = useState({
         flightNumber: '',
         departureID: '',
         destinationID: '',
-        journeyDate:'',
+        journeyDate: '',
         departureTime: '',
         arrivalTime: '',
         totalCapacity: '',
@@ -22,30 +23,30 @@ const FlightContent = () => {
     const [showEditPopup, setShowEditPopup] = useState(false);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [deleteFlightId, setDeleteFlightId] = useState(null);
-    const [dapatureCities,setDepatureCities] = useState([]);
-    const [destinationCities,setDestinationCities] = useState([]);
+    const [dapatureCities, setDepatureCities] = useState([]);
+    const [destinationCities, setDestinationCities] = useState([]);
 
     useEffect(() => {
         fetchFlights();
         if (showPopup || showEditPopup) {
             fetchCities();
         }
-    }, [showPopup,showEditPopup]);
+    }, [showPopup, showEditPopup]);
 
     useEffect(() => {
 
-        if(formData.departureID){
+        if (formData.departureID) {
             const destinationCities = cities.filter(city => city.id !== formData.departureID);
             setDestinationCities(destinationCities);
         }
 
-        if(formData.destinationID){
+        if (formData.destinationID) {
             const departureCities = cities.filter(city => city.id !== formData.destinationID);
             setDepatureCities(departureCities);
         }
 
-    },[formData.departureID,formData.destinationID])
-    
+    }, [formData.departureID, formData.destinationID])
+
 
     const fetchCities = async () => {
         try {
@@ -119,7 +120,7 @@ const FlightContent = () => {
                     flightNumber: '',
                     departureID: '',
                     destinationID: '',
-                    journeyDate:'',
+                    journeyDate: '',
                     departureTime: '',
                     arrivalTime: '',
                     totalCapacity: '',
@@ -140,7 +141,7 @@ const FlightContent = () => {
             flightNumber: '',
             departureID: '',
             destinationID: '',
-            journeyDate:'',
+            journeyDate: '',
             departureTime: '',
             arrivalTime: '',
             totalCapacity: '',
@@ -158,9 +159,26 @@ const FlightContent = () => {
         setShowPopup(!showPopup);
     };
 
+    const editDateFormate = (date) => {
+        const parsedDate = new Date(date);
+        const year = parsedDate.getFullYear();
+        const month = String(parsedDate.getMonth() + 1).padStart(2, '0');
+        const day = String(parsedDate.getDate()).padStart(2, '0');
+        const hours = String(parsedDate.getHours()).padStart(2, '0');
+        const minutes = String(parsedDate.getMinutes()).padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
+        return formattedDate;
+    }
+
     const handleEdit = (flightId) => {
         const flightToEdit = flights.find(flight => flight.id === flightId);
-        setEditFlightData(flightToEdit);
+        const formatedDate = {
+            ...flightToEdit,
+            departureTime: editDateFormate(flightToEdit.departureTime),
+            arrivalTime: editDateFormate(flightToEdit.arrivalTime)
+        }
+        console.log("formatedDate >>>", formatedDate);
+        setEditFlightData(formatedDate);
         setShowEditPopup(true);
     };
 
@@ -173,21 +191,19 @@ const FlightContent = () => {
     };
 
     const handleUpdateFlight = async () => {
+        console.log("editFlightData >>>", editFlightData);
         try {
-            if (!editFlightData.flightNumber || !editFlightData.departureID || !editFlightData.destinationID || editFlightData.journeyDate || !editFlightData.departureTime || !editFlightData.arrivalTime || !editFlightData.totalCapacity || !editFlightData.availableSeats || !editFlightData.classType || !editFlightData.baseFare) {
+            if (!editFlightData.flightNumber || !editFlightData.departureID || !editFlightData.destinationID || !editFlightData.journeyDate || !editFlightData.departureTime || !editFlightData.arrivalTime || !editFlightData.totalCapacity || !editFlightData.availableSeats || !editFlightData.classType || !editFlightData.baseFare) {
                 toast.error("All fields are required");
                 return;
             }
-    
+
+
             if (new Date(editFlightData.departureTime) > new Date(editFlightData.arrivalTime)) {
                 toast.error("Departure time cannot be greater than arrival time");
                 return;
             }
-    
-            if (editFlightData.departureID === editFlightData.destinationID) {
-                toast.error("Departure and destination cities cannot be same");
-                return;
-            }
+
             const token = localStorage.getItem("token");
             const response = await axios.put(
                 `http://localhost:5050/api/flight/edit/${editFlightData.id}`,
@@ -196,7 +212,7 @@ const FlightContent = () => {
             );
             console.log("response >>>", response);
 
-            if(response.status === 200){
+            if (response.status === 200) {
                 toast.success("Flight updated successfully");
                 setShowEditPopup(false);
                 fetchFlights();
@@ -213,12 +229,12 @@ const FlightContent = () => {
     };
 
     const handleConfirmDelete = async () => {
-        
+
         try {
             const token = localStorage.getItem("token");
             const response = await axios.delete(`http://localhost:5050/api/flight/delete/${deleteFlightId}`, { headers: { Authorization: `Bearer ${token}` } });
             console.log("response >>>", response);
-            if(response.status === 200){
+            if (response.status === 200) {
                 toast.success("Flight deleted successfully");
                 setShowDeleteConfirmation(false);
                 fetchFlights();
@@ -228,7 +244,7 @@ const FlightContent = () => {
         }
     };
 
-    
+
 
     return (
         <>
@@ -309,16 +325,16 @@ const FlightContent = () => {
                     <table className="table-auto border border-gray-300">
                         <thead>
                             <tr className="bg-gray-200">
-                                <th className="px-4 py-2">flightNumber</th>
-                                <th className="px-4 py-2">departure</th>
-                                <th className="px-4 py-2">destination</th>
-                                <th className="px-4 py-2">journeyDate</th>
+                                <th className="px-4 py-2">Number</th>
+                                <th className="px-4 py-2">From</th>
+                                <th className="px-4 py-2">To</th>
+                                <th className="px-4 py-2">JDate</th>
                                 <th className="px-4 py-2">departureTime</th>
                                 <th className="px-4 py-2">arrivalTime</th>
-                                <th className="px-4 py-2">totalCapacity</th>
-                                <th className="px-4 py-2">availableSeats</th>
-                                <th className="px-4 py-2">classType</th>
-                                <th className="px-4 py-2">baseFare</th>
+                                <th className="px-4 py-2">Capacity</th>
+                                <th className="px-4 py-2">available</th>
+                                <th className="px-4 py-2">Type</th>
+                                <th className="px-4 py-2">Fare</th>
                                 <th className="px-4 py-2">Actions</th>
                             </tr>
                         </thead>
@@ -328,9 +344,9 @@ const FlightContent = () => {
                                     <td className="border px-4 py-2">{flight.flightNumber}</td>
                                     <td className="border px-4 py-2">{flight.departureCity.cityName}</td>
                                     <td className="border px-4 py-2">{flight.destinationCity.cityName}</td>
-                                    <td className="border px-4 py-2">{new Date(flight.journeyDate).toLocaleString()}</td>
-                                    <td className="border px-4 py-2">{new Date(flight.departureTime).toLocaleString()}</td>
-                                    <td className="border px-4 py-2">{new Date(flight.arrivalTime).toLocaleString()}</td>
+                                    <td className="border px-4 py-2">{flight.journeyDate}</td>
+                                    <td className="border px-4 py-2">{flight.departureTime}</td>
+                                    <td className="border px-4 py-2">{flight.arrivalTime}</td>
                                     <td className="border px-4 py-2">{flight.totalCapacity}</td>
                                     <td className="border px-4 py-2">{flight.availableSeats}</td>
                                     <td className="border px-4 py-2">{flight.classType}</td>
@@ -373,16 +389,16 @@ const FlightContent = () => {
                                 </select>
                             </div>
                             <div>
-                                    <label htmlFor="journeyDate" className="block font-semibold my-2">journeyDate</label>
-                                    <input type="date" id="journeyDate" name="journeyDate" value={new Date(editFlightData.journeyDate).toISOString().split('T')[0]} onChange={handleChangeForEdit} className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:border-indigo-500" />
-                                </div>
+                                <label htmlFor="journeyDate" className="block font-semibold my-2">journeyDate</label>
+                                <input type="date" id="journeyDate" name="journeyDate" value={new Date(editFlightData.journeyDate).toISOString().split('T')[0]} onChange={handleChangeForEdit} className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:border-indigo-500" />
+                            </div>
                             <div>
                                 <label htmlFor="departureTime" className="block font-semibold my-2">Departure Time</label>
-                                <input type="datetime-local" id="departureTime" name="departureTime" value={editFlightData.departureTime ? editFlightData.departureTime.slice(0, -1) : ''} onChange={handleChangeForEdit} className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:border-indigo-500" />
+                                <input type="datetime-local" id="departureTime" name="departureTime" value={editFlightData.departureTime} onChange={handleChangeForEdit} className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:border-indigo-500" />
                             </div>
                             <div>
                                 <label htmlFor="arrivalTime" className="block font-semibold my-2">Arrival Time</label>
-                                <input type="datetime-local" id="arrivalTime" name="arrivalTime" value={editFlightData.arrivalTime ? editFlightData.arrivalTime.slice(0, -1) : ''} onChange={handleChangeForEdit} className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:border-indigo-500" />
+                                <input type="datetime-local" id="arrivalTime" name="arrivalTime" value={editFlightData.arrivalTime} onChange={handleChangeForEdit} className="border border-gray-300 rounded-md px-4 py-2 w-full focus:outline-none focus:border-indigo-500" />
                             </div>
                             <div>
                                 <label htmlFor="totalCapacity" className="block font-semibold my-2">Total Capacity</label>

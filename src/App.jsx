@@ -17,6 +17,7 @@ import BookingContent from "./content/Admin/BookingContent";
 import UserContent from "./content/Admin/UserContent";
 import CityContent from "./content/Admin/CityContent";
 import { ToastContainer } from "react-toastify";
+import Booking from "./Pages/Booking";
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
           <Route path="/" element={<Landing title={"Airline-Home"} />} />
           <Route path="/about" element={<About title={"Airline-About"} />} />
           <Route path="/login" element={<Login title={"Airline-Login"} />} />
+          <Route path="/booking" element={<Booking title={"Airline-booking"} />} />
           <Route
             path="/register"
             element={<Register title={"Airline-Register"} />}

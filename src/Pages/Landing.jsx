@@ -1,184 +1,83 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React from "react";
+import Air1 from "../assets/air1.jpg";
+import Air2 from "../assets/air2.jpg";
+import Air3 from "../assets/air3.jpg";
+import Air4 from "../assets/air4.jpg";
+import Air5 from "../assets/air5.jpg";
+import Air6 from "../assets/air6.jpg";
+import { useNavigate } from "react-router-dom";
+
 
 const Landing = () => {
+  const navigate = useNavigate();
 
-  const getTodayDateString = () => {
-    const today = new Date();
-    return today.toISOString().split('T')[0];
+  const redirectToBooking = () => {
+    navigate("/booking");
   }
-  const getTomorrowDateString =() =>{
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    return tomorrow.toISOString().split('T')[0];
-  }
-
-  const [tripType, setTripType] = useState("one-way");
-  const [journeyDate, setJourneyDate] = useState(getTodayDateString());
-  const [returnDate, setReturnDate] = useState(getTomorrowDateString());
-  const [cities, setCities] = useState([]);
-  const [dapatureCities, setDepatureCities] = useState([]);
-  const [destinationCities, setDestinationCities] = useState([]);
-  const [departureID, setDepartureID] = useState("");
-  const [destinationID, setDestinationID] = useState("");
-
-  
-
-  useEffect(() => {
-    console.log("tripType", tripType);
-    if (tripType === "one-way") {
-      setReturnDate("");
-    } else {
-      setReturnDate(returnDate || getTomorrowDateString());
-    }
-  }, [tripType]);
-
-  useEffect(() => {
-
-    if (departureID) {
-      const destinationCities = cities.filter(city => city.id !== departureID);
-      setDestinationCities(destinationCities);
-    }
-
-    if (destinationID) {
-      const departureCities = cities.filter(city => city.id !== destinationID);
-      setDepatureCities(departureCities);
-    }
-
-  }, [departureID, destinationID])
-
-  useEffect(() => {
-    fetchCities();
-  }, []);
-
-  const fetchCities = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:5050/api/city/get",
-        { headers: { Authorization: `Bearer ${token}` } });
-      const { data } = response;
-      console.log("Cities data:", data);
-      if (data.status === 200) {
-        setCities(data.data);
-        setDepatureCities(data.data);
-        setDestinationCities(data.data);
-      }
-    } catch (error) {
-      console.error("Error fetching cities:", error);
-    }
-  };
-
-  const handleFrom = (e) => {
-    setDepartureID(e.target.value);
-  }
-
-  const handleTo = (e) => {
-    setDestinationID(e.target.value);
-  }
-
-
-  const handleTripTypeChange = (e) => {
-    const newTripType = e.target.value;
-    setTripType(newTripType);
-  };
-
-  const handleJourneyDateChange = (e) => {
-    setJourneyDate(e.target.value);
-  };
-
-  const handleReturnDateChange = (e) => {
-    setReturnDate(e.target.value);
-    setTripType("round-trip");
-  };
-
-
- 
 
   return (
-    <>
-      <div className="container mx-auto pb-8 px-8 my-8">
-        <div className="flex justify-between mt-8">
-          <div className="flex">
-            <div className="flex justify-center items-center text-center">
-              <input
-                type="radio"
-                id="one-way"
-                name="flight-type"
-                value="one-way"
-                checked={tripType === "one-way"}
-                onChange={handleTripTypeChange}
-                className="form-radio text-indigo-600 h-5 w-5 mx-2"
-              />
-              <label className="mx-2" htmlFor="one-way">
-                One Way
-              </label>
-            </div>
-            <div className="flex justify-center items-center text-center">
-              <input
-                type="radio"
-                id="round-trip"
-                name="flight-type"
-                value="round-trip"
-                checked={tripType === "round-trip"}
-                onChange={handleTripTypeChange}
-                className="form-radio text-indigo-600 h-5 w-5 mx-2"
-              />
-              <label className="mx-2" htmlFor="round-trip">
-                Round trip
-              </label>
-            </div>
-          </div>
-          <div>
-            <p className="text-gray-700">Book International and Domestic Flights</p>
-          </div>
-        </div>
-        <div className="flex justify-between mt-8">
-          <div className="mt-2">
-            <p className="text-gray-600 text-xl mb-4">From</p>
-            <select id="departureID" name="departureID" value={departureID} onChange={handleFrom} className="border border-gray-300 rounded-md px-4 py-2 ml-4 w-full focus:outline-none focus:border-indigo-500">
-              <option value="">Select Departure City</option>
-              {dapatureCities.map(city => (
-                <option key={city.id} value={city.id}>{city.cityName}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <p className="text-gray-600 text-xl mb-4">To</p>
-            <select id="departureID" name="departureID" value={destinationID} onChange={handleTo} className="border border-gray-300 rounded-md px-4 py-2 ml-4 w-full focus:outline-none focus:border-indigo-500">
-              <option value="">Select Departure City</option>
-              {destinationCities.map(city => (
-                <option key={city.id} value={city.id}>{city.cityName}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <p className="text-gray-600 text-xl">Departure</p>
-            <input
-              type="date"
-              id="departureTime"
-              name="departureTime"
-              value={journeyDate}
-              onChange={handleJourneyDateChange}
-              className="border border-gray-300 rounded-md mt-2 px-8 py-2 w-full focus:outline-none focus:border-indigo-500"
-            />
-          </div>
-          <div>
-            <p className="text-gray-600 text-xl">Return</p>
-            <input
-              type="date"
-              id="returnTime"
-              name="returnTime"
-              value={returnDate}
-              onChange={handleReturnDateChange}
-              className="border border-gray-300 rounded-md mt-2 px-8 py-2 w-full focus:outline-none focus:border-indigo-500"
-            />
-          </div>
-        </div>
-        <div className="flex justify-center mt-8">
-          <button className="bg-indigo-600 text-white px-4 py-2 rounded-md">Search</button>
+    <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+          Welcome to AirLine
+        </h1>
+        <p className="mt-4 text-xl text-gray-500">
+          Explore seamless skies with our user-friendly airline website. Discover effortless booking, real-time flight updates, and exclusive deals. Elevate your travel experience with our intuitive interface, making your journey from booking to boarding a breeze. Fly with confidence, fly with our Airline Name
+        </p>
+        <div className="mt-8">
+          <button
+          onClick={redirectToBooking}
+            className="inline-block rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-center font-medium text-white hover:bg-indigo-700"
+          >
+            Fly in the sky with us
+          </button>
         </div>
       </div>
-    </>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8 mt-12">
+        <div className="h-80 overflow-hidden rounded-lg">
+          <img
+            src={Air1}
+            alt="air1"
+            className="h-full w-full object-cover object-center"
+          />
+        </div>
+        <div className="h-80 overflow-hidden rounded-lg">
+          <img
+            src={Air2}
+            alt="air2"
+            className="h-full w-full object-cover object-center"
+          />
+        </div>
+        <div className="h-80 overflow-hidden rounded-lg">
+          <img
+            src={Air3}
+            alt="air3"
+            className="h-full w-full object-cover object-center"
+          />
+        </div>
+        <div className="h-80 overflow-hidden rounded-lg">
+          <img
+            src={Air4}
+            alt="air4"
+            className="h-full w-full object-cover object-center"
+          />
+        </div>
+        <div className="h-80 overflow-hidden rounded-lg">
+          <img
+            src={Air5}
+            alt="air5"
+            className="h-full w-full object-cover object-center"
+          />
+        </div>
+        <div className="h-80 overflow-hidden rounded-lg">
+          <img
+            src={Air6}
+            alt="air6"
+            className="h-full w-full object-cover object-center"
+          />
+        </div>
+      </div>
+    </div>
   );
 };
 
